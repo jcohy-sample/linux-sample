@@ -12,3 +12,21 @@ https://docs.jcohy.com[*https://docs.jcohy.com*]
 
 我的学习笔记,记录学习过程中的笔记以及遇到的问题,以及我的一些经验总结.如果出现链接失效,或者想知道更多的内容等情况可以提交 https://github.com/jcohy/jcohy-issues/issues[Issues] 提醒我修改相关内容.
 ****
+
+include::about.adoc[leveloffset=+1]
+
+include::command.adoc[leveloffset=+1]
+
+include::vim.adoc[leveloffset=+1]
+
+include::software.adoc[leveloffset=+1]
+
+include::user.adoc[leveloffset=+1]
+
+include::permission.adoc[leveloffset=+1]
+
+include::file.adoc[leveloffset=+1]
+
+include::shell.adoc[leveloffset=+1]
+
+include::install.adoc[leveloffset=+1]

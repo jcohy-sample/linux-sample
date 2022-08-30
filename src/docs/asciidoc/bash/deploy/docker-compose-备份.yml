@@ -1,0 +1,298 @@
+version: '3'
+services:
+  mysql8:
+    image: mysql:8.0.21
+    # 容器名(以后的控制都通过这个)
+    container_name: mysql8.0
+    # 重启策略
+    restart: always
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      # root 密码
+      MYSQL_ROOT_PASSWORD: 1405@xuanwu123A
+      # 映射端口
+    ports:
+      - 3306:3306
+    volumes:
+      # 数据挂载
+      #- /root/mysql/data/:/var/lib/mysql/
+      # 配置挂载
+      #- /root/mysql/conf/:/etc/mysql/conf.d/
+      # 初始化目录挂载，注意此处我只跑了这个挂载，只是为了说明其他配置不应该数据初始化
+      - ${DOCKER_DIR}/mysql/var:/var/lib/mysql
+      - ${DOCKER_DIR}/mysql/conf:/etc/mysql/conf.d
+      - ${DOCKER_DIR}/mysql/data:/backup
+    command:
+      # 将mysql8.0默认密码策略 修改为 原先 策略 (mysql8.0对其默认策略做了更改 会导致密码无法匹配)
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    networks:
+      - aix_net
+  nacos:
+    image: nacos/nacos-server:latest
+    hostname: "nacos-standalone"
+    container_name: nacos-master
+    environment:
+      - MODE=standalone
+      - TZ=Asia/Shanghai
+    volumes:
+      - ${DOCKER_DIR}/nacos/master/logs:/home/nacos/logs
+      - ${DOCKER_DIR}/nacos/master/init.d/custom.properties:/home/nacos/init.d/custom.properties
+    ports:
+      - 8848:8848
+    restart: always
+    networks:
+      aix_net:
+        ipv4_address: 172.30.0.48
+
+  sentinel:
+    image: bladex/sentinel-dashboard:latest
+    hostname: "sentinel"
+    container_name: sentinel
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 8858:8858
+    restart: on-failure
+    networks:
+      aix_net:
+        ipv4_address: 172.30.0.58
+  zipkin:
+    image: openzipkin/zipkin
+    hostname: "zipkin"
+    container_name: zipkin
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 9411:9411
+    restart: always
+    networks:
+      aix_net:
+        ipv4_address: 172.30.0.68
+
+  minio:
+    image: minio/minio
+    hostname: "minio"
+    container_name: minio
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    volumes: 
+      - ${DOCKER_DIR}/minio/data:/data
+      - ${DOCKER_DIR}/minio/config:/root/.minio
+    ports:
+      - 9001:9000
+    command: "server /data"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://minio:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - aix_net
+      
+  api-nginx:
+    image: nginx:stable-alpine-perl
+    hostname: "api-nginx"
+    container_name: api-nginx
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 88:88
+    volumes:
+      - ${DOCKER_DIR}/nginx/api/conf/nginx.conf:/etc/nginx/nginx.conf
+    privileged: true
+    restart: always
+    networks:
+      - aix_net
+
+  web-nginx:
+    image: nginx:stable-alpine-perl
+    hostname: "web-nginx"
+    container_name: web-nginx
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 8000:8000
+    volumes:
+      - ${DOCKER_DIR}/nginx/web/html:/usr/share/nginx/html
+      - ${DOCKER_DIR}/nginx/web/conf/nginx.conf:/etc/nginx/nginx.conf
+    privileged: true
+    restart: always
+    networks:
+      - aix_net
+
+  redis-master:
+    image: redis:6.0.16-alpine
+    hostname: "redis"
+    container_name: redis-master
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 6379:6379
+    volumes:
+      - ${DOCKER_DIR}/redis/data:/data
+      - ${DOCKER_DIR}/redis/conf:/etc/redis/conf
+    command: "redis-server /etc/redis/conf/redis.conf --appendonly yes"
+    privileged: true
+    restart: always
+    networks:
+      - aix_net
+
+  rabbitmq:
+    image: rabbitmq:3.9.14-management
+    hostname: "rabbitmq"
+    container_name: rabbitmq
+    environment:
+      - TZ=Asia/Shanghai
+      - RABBITMQ_DEFAULT_USER=xwAdmin
+      - RABBITMQ_DEFAULT_PASS=qwewsxzxc@123A
+    volumes:
+      - ${DOCKER_DIR}/rabbitmq/data:/var/lib/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    privileged: true
+    restart: always
+    networks:
+      - aix_net
+
+  es-master:
+    container_name: es-master
+    hostname: es-master
+    image: elasticsearch:8.1.2
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ${DOCKER_DIR}/elasticsearch/master/conf/es-master.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ${DOCKER_DIR}/elasticsearch/master/data:/usr/share/elasticsearch/data
+      - ${DOCKER_DIR}/elasticsearch/master/logs:/usr/share/elasticsearch/logs
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - aix_net
+      
+  es-slave1:
+    container_name: es-slave1
+    image: elasticsearch:8.1.2
+    restart: always
+    ports:
+      - 9201:9200
+      - 9301:9300
+    volumes:
+      - ${DOCKER_DIR}/elasticsearch/slave1/conf/es-slave1.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ${DOCKER_DIR}/elasticsearch/slave1/data:/usr/share/elasticsearch/data
+      - ${DOCKER_DIR}/elasticsearch/slave1/logs:/usr/share/elasticsearch/logs
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - aix_net
+      
+  es-slave2:
+    container_name: es-slave2
+    image: elasticsearch:8.1.2
+    restart: always
+    ports:
+      - 9202:9200
+      - 9302:9300
+    volumes:
+      - ${DOCKER_DIR}/elasticsearch/slave2/conf/es-slave2.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ${DOCKER_DIR}/elasticsearch/slave2/data:/usr/share/elasticsearch/data
+      - ${DOCKER_DIR}/elasticsearch/slave2/logs:/usr/share/elasticsearch/logs
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - aix_net
+      
+  es-head:
+    container_name: es-head
+    image: mobz/elasticsearch-head:5
+    restart: always
+    ports:
+      - 9100:9100
+    depends_on:
+      - es-master
+      - es-slave1
+      - es-slave2
+    networks:
+      - aix_net
+      
+  kibana:
+    container_name: kibana
+    hostname: kibana
+    image: kibana:8.1.2
+    restart: always
+    ports:
+      - 5601:5601
+    volumes:
+      - ${DOCKER_DIR}/kibana/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      - elasticsearch.hosts=http://es-master:9200
+    depends_on:
+      - es-master
+      - es-slave1
+      - es-slave2
+    networks:
+      - aix_net
+      
+  filebeat:
+    # 容器名称
+    container_name: filebeat
+    # 主机名称
+    hostname: filebeat
+    # 镜像
+    image: docker.elastic.co/beats/filebeat:8.1.2
+    # 重启机制
+    restart: always
+    # 持久化挂载
+    volumes:
+      - ${DOCKER_DIR}/filebeat/conf/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      # 映射到容器中[作为数据源]
+      - ${DOCKER_DIR}/elk/logs:/home/project/elk/logs
+      - ${DOCKER_DIR}/filebeat/logs:/usr/share/filebeat/logs
+      - ${DOCKER_DIR}/filebeat/data:/usr/share/filebeat/data
+    # 将指定容器连接到当前连接，可以设置别名，避免ip方式导致的容器重启动态改变的无法连接情况
+    links:
+      - logstash
+    ports:
+      - 9000:9000
+    # 依赖服务[可无]
+    depends_on:
+      - es-master
+      - es-slave1
+      - es-slave2
+    networks:
+      - aix_net
+      
+  logstash:
+    container_name: logstash
+    hostname: logstash
+    image: logstash:8.1.2
+    command: logstash -f ./conf/logstash-filebeat.conf
+    restart: always
+    volumes:
+      # 映射到容器中
+      - ${DOCKER_DIR}/logstash/conf/logstash-filebeat.conf:/usr/share/logstash/conf/logstash-filebeat.conf
+      - ${DOCKER_DIR}/logstash/conf/logstash.yml:/usr/share/logstash/config/logstash.yml
+    ports:
+      - 5044:5044
+    depends_on:
+      - es-master
+      - es-slave1
+      - es-slave2
+    networks:
+      - aix_net
+      
+networks:
+  aix_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
