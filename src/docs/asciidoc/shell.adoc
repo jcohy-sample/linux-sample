@@ -1489,7 +1489,7 @@ Banner /etc/issue.net
 
 == 正则表达式
 
-我们在 <<linux-command-search-grep>> 章节中说过正则表达式和通配符的区别，其实这种区别只在 Shell 中适用，因为用来在文件中搜索字符串的命令(如 `grep`,`awk`,`sed`) 等命令可以支持正则表达式，
+我们在 <<command.adoc#linux-command-search-grep>> 章节中说过正则表达式和通配符的区别，其实这种区别只在 Shell 中适用，因为用来在文件中搜索字符串的命令(如 `grep`,`awk`,`sed`) 等命令可以支持正则表达式，
 而在系统中搜索文件的命令(如 `ls`,`find`,`cp`)等这些命令不支持正则表达式。所以只能使用 Shell 自己的通配符来匹配了。
 
 .基础正则表达式

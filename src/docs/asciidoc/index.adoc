@@ -1,6 +1,5 @@
 [[java]]
 = Java
-include::attributes.adoc[]
 
 ****
 作者网页:
