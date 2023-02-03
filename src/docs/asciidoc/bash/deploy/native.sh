@@ -9,21 +9,21 @@ VIOLET_COLOR="\033[35m"
 YELLOW_COLOR="\033[33m"
 RES="\033[0m"
 
-#软件所在http服务器。
-BASE_URL=http://software.jcohy.com/linux
-#脚本所在http服务器。
-BASH_CONFIG=http://software.jcohy.com/bash/common
+#软件所在 http 服务器。
+BASE_URL=http://software.jcohy.com
+#脚本所在 http 服务器。
+BASH_CONFIG=http://software.jcohy.com/bash/deploy
 
 #软件下载目录
 BASE_DIR=/opt/software
 INSTALL_DIR=/usr/local
 
 # 软件包名
-JDK_PACKAGE=OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9.tar.gz
-TOMCAT_PACKAGE=apache-tomcat-7.0.94.tar.gz
-MYSQL_PACKAGE=mysql-8.0.19-1.el7.x86_64.rpm-bundle.tar
-GCC_PACKAGE=gcc-8.3.0.build.tar.gz
-NGINX_PACKAGE=nginx-1.6.2.build.tar.gz
+JDK_PACKAGE=jdk/11/OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9.tar.gz
+TOMCAT_PACKAGE=tomcat/7/apache-tomcat-7.0.94.tar.gz
+MYSQL_PACKAGE=mysql/8/mysql-8.0.19-1.el7.x86_64.rpm-bundle.tar
+GCC_PACKAGE=gcc/gcc-8.3.0.build.tar.gz
+NGINX_PACKAGE=nginx/nginx-1.6.2.build.tar.gz
 
 #使用说明，用来提示输入参数
 usage() {

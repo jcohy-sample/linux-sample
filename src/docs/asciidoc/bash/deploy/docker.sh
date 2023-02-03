@@ -10,7 +10,7 @@ RES="\033[0m"
 #软件安装目录
 DOCKER_DIR=/usr/local/docker
 
-BASH_CONFIG=http://software.jcohy.com/bash/common
+BASH_CONFIG=http://software.jcohy.com/conf
 
 # 使用说明，用来提示输入参数
 usage() {

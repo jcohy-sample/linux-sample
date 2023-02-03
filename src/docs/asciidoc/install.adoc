@@ -44,17 +44,17 @@
 OpenJDK8U-jdk_x64_linux_hotspot_8u292b10
 
 OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9
-| https://software.jcohy.com/linux/jdk-8u221-linux-x64.tar.gz[jdk-8u221]
+| https://software.jcohy.com/jdk/8/jdk-8u221-linux-x64.tar.gz[jdk-8u221]
 
-https://software.jcohy.com/linux/OpenJDK8U-jdk_x64_linux_hotspot_8u292b10.tar.gz[OpenJDK8U-jdk_x64_linux_hotspot_8u292b10]
+https://software.jcohy.com/jdk/8/OpenJDK8U-jdk_x64_linux_hotspot_8u292b10.tar.gz[OpenJDK8U-jdk_x64_linux_hotspot_8u292b10]
 
-https://software.jcohy.com/linux/OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9.tar.gz[OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9]
+https://software.jcohy.com/jdk/11/OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9.tar.gz[OpenJDK11U-jdk_x64_linux_hotspot_11.0.11_9]
 | 无
 
 | tomcat
 | CentOS Linux release 7.6
 | 7.0.94
-| https://software.jcohy.com/linux/apache-tomcat-7.0.94.tar.gz[apache-tomcat-7.0.94]
+| https://software.jcohy.com/tomcat/7/apache-tomcat-7.0.94.tar.gz[apache-tomcat-7.0.94]
 
 https://tomcat.apache.org[官方网站]
 | 无
@@ -62,20 +62,20 @@ https://tomcat.apache.org[官方网站]
 | mysql
 | CentOS Linux release 7.6
 | 8.0.19-1.el7.x86_64
-| https://software.jcohy.com/linux/mysql-8.0.19-1.el7.x86_64.rpm-bundle.tar[mysql-8.0.19-1.el7.x86_64]
+| https://software.jcohy.com/mysql/8/mysql-8.0.19-1.el7.x86_64.rpm-bundle.tar[mysql-8.0.19-1.el7.x86_64]
 | 无
 
 | redis
 | CentOS Linux release 7.6
 | 5.0.5
-| http://download.redis.io/releases/redis-5.0.5.tar.gz[redis-5.0.5.tar.gz]
+| https://software.jcohy.com/redis/5/redis-5.0.5.tar.gz[redis-5.0.5.tar.gz]
 | 无
 
 | nginx
 | CentOS Linux release 7.6
 | 1.6.2
-| http://nginx.org/download/nginx-1.6.2.tar.gz[nginx-1.6.2.tar.gz]
-| https://software.jcohy.com/linux/nginx-1.6.2.build.tar.gz[编译后下载地址]
+| https://software.jcohy.com/nginx/nginx-1.6.2.tar.gz[nginx-1.6.2.tar.gz]
+| https://software.jcohy.com/nginx/nginx-1.6.2.build.tar.gz[编译后下载地址]
 
 | git
 | Windows
@@ -92,7 +92,7 @@ https://tomcat.apache.org[官方网站]
 | node
 | CentOS Linux release 7.6
 | node-v10.16.0.tar.gz
-| https://software.jcohy.com/linux/node-v10.16.0.tar.gz[node-v10.16.0]
+| https://software.jcohy.com/node/node-v10.16.0.tar.gz[node-v10.16.0]
 | 无
 
 | yapi
@@ -122,7 +122,7 @@ https://tomcat.apache.org[官方网站]
 | Harbor
 | CentOS Linux release 7.6
 | v2.3.1
-| https://software.jcohy.com/linux/harbor-offline-installer-v2.3.1.tgz[harbor-offline-installer-v2.3.1]
+| https://software.jcohy.com/harbor/harbor-offline-installer-v2.3.1.tgz[harbor-offline-installer-v2.3.1]
 | 无
 
 | jenkins
@@ -135,7 +135,7 @@ https://tomcat.apache.org[官方网站]
 | CentOS Linux release 7.6
 | gcc-8.3.0.tar.gz
 | http://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz[http://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz]
-| https://jcohy-software.oss-cn-chengdu.aliyuncs.com/linux/gcc-8.3.0.build.tar.gz[gcc-8.3.0.build]
+| https://software.jcohy.com/gcc/gcc-8.3.0.build.tar.gz[gcc-8.3.0.build]
 
 | LDAP
 | CentOS Linux release 7.6
@@ -152,7 +152,7 @@ https://tomcat.apache.org[官方网站]
 | zookeeper
 | CentOS Linux release 7.6
 | 3.4.5
-| https://jcohy-software.oss-cn-chengdu.aliyuncs.com/linux/zookeeper-3.4.5.tar.gz[zookeeper-3.4.5]
+| https://software.jcohy.com/zookeeper/zookeeper-3.4.5.tar.gz[zookeeper-3.4.5]
 | 无
 
 | ElasticSearch
@@ -251,7 +251,7 @@ netstat -anpt | grep 2465
 
 . 通过浏览器访问 tomcat
 
-http://host:8080
+http://host:8080[http://host:8080]
 
 [[linux-install-mysql]]
 === Mysql
@@ -442,11 +442,11 @@ docker run --name mysql \
 [[linux-install-redis-usually]]
 ==== 常规安装
 
-. https://software.jcohy.com/linux/redis-5.0.5.tar.gz[下载] redis 安装包
+. https://software.jcohy.com/redis/5/redis-5.0.5.tar.gz[下载] redis 安装包
 +
 [source,shell]
 ----
-wget https://software.jcohy.com/linux/redis-5.0.5.tar.gz
+wget https://software.jcohy.com/redis/5/redis-5.0.5.tar.gz
 tar xzf redis-5.0.5.tar.gz
 cd redis-5.0.5
 make
@@ -633,7 +633,7 @@ docker run -d -p 80:80 --name nginx -v /docker/nginx/www:/usr/share/nginx/html -
 
 这里本人将 `nginx` 软件进行了编译.使用编译后的文件直接解压使用即可.
 
-https://software.jcohy.com/linux/nginx-1.6.2.build.tar.gz[下载地址]
+https://software.jcohy.com/nginx/nginx-1.6.2.build.tar.gz[下载地址]
 
 [source,shell]
 ----
@@ -1469,7 +1469,7 @@ Harbor 是构建企业级私有 docker 镜像的仓库的开源解决方案，�
 ----
 mkdir /opt/software
 cd /opt/software
-wget https://software.jcohy.com/linux/harbor-offline-installer-v2.3.1.tgz
+wget https://software.jcohy.com/harbor/harbor-offline-installer-v2.3.1.tgz
 tar xvzf harbor-offline-installer-v1.6.0.tgz -C /usr/local
 cd /usr/local/harbor
 cp harbor.yml.tmpl harbor.yml
@@ -2068,7 +2068,7 @@ wget https://downloads.atlassian.com/software/confluence/downloads/atlassian-con
 
 2.下载破解器
 
-https://software.jcohy.com/windows/confluence%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7.zip
+https://software.jcohy.com/confluence/confluence-crack.zip
 
 3.安装 confluence
 
@@ -2083,7 +2083,7 @@ chmod +x atlassian-confluence-6.12.1-x64.bin
 
 下载破解和 mysql 驱动
 
-https://software.jcohy.com/windows/confluence%E7%A0%B4%E8%A7%A3%E5%B7%A5%E5%85%B7.zip
+https://software.jcohy.com/confluence/confluence-crack.zip
 
 - 1.备份 jar 包
 
@@ -2515,9 +2515,9 @@ docker run -e ES_JAVA_OPTS="-Xms256m -Xmx256m" -d -p 9200:9200 -p 9300:9300 --na
 |===
 | 变量名 | 目录 | 说明
 
-| BASH_URL | https://software.jcohy.com/linux/ | 所有所需软件安装包所在的服务器(可以使用 httpd 或者 nginx 等服务器搭建)
+| BASH_URL | https://software.jcohy.com/bash | 脚本位置
 
-| BASH_CONFIG | https://software.jcohy.com/bash/ | 安装所需脚本和配置文件目录
+| BASH_CONFIG | https://software.jcohy.com/conf/ | 配置文件位置
 
 | BASE_DIR | /opt/software | 本地存放安装包的地址
 
