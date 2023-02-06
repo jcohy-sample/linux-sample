@@ -32,6 +32,7 @@ services:
       --lower_case_table_names=1
     networks:
       - jcohy-net
+
   nacos:
     image: nacos/nacos-server:latest
     hostname: "nacos-standalone"
@@ -61,41 +62,7 @@ services:
     networks:
       jcohy-net:
         ipv4_address: 172.30.0.58
-  zipkin:
-    image: openzipkin/zipkin
-    hostname: "zipkin"
-    container_name: zipkin
-    environment:
-      - TZ=Asia/Shanghai
-    ports:
-      - 9411:9411
-    restart: always
-    networks:
-      jcohy-net:
-        ipv4_address: 172.30.0.68
 
-  minio:
-    image: minio/minio
-    hostname: "minio"
-    container_name: minio
-    environment:
-      MINIO_ACCESS_KEY: minio
-      MINIO_SECRET_KEY: minio123
-    volumes: 
-      - ${DOCKER_DIR}/minio/data:/data
-      - ${DOCKER_DIR}/minio/config:/root/.minio
-    ports:
-      - 9001:9000
-    command: "server /data"
-    restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://minio:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-    networks:
-      - jcohy-net
-      
   api-nginx:
     image: nginx:stable-alpine-perl
     hostname: "api-nginx"
@@ -161,45 +128,43 @@ services:
     restart: always
     networks:
       - jcohy-net
-  mosquitto: 
-    image: eclipse-mosquitto:latest
-    hostname: "mosquitto"
-    container_name: mosquitto
-    volumes:
-      - ${DOCKER_DIR}/mosquitto/config:/mosquitto/config
-      - ${DOCKER_DIR}/mosquitto/data:/mosquitto/data
-      - ${DOCKER_DIR}/mosquitto/log:/mosquitto/log
+
+  zipkin:
+    image: openzipkin/zipkin
+    hostname: "zipkin"
+    container_name: zipkin
+    environment:
+      - TZ=Asia/Shanghai
     ports:
-      - 9001:9001
-    privileged: true
+      - 9411:9411
     restart: always
     networks:
-      - jcohy-net
-  emqx:
-    image: emqx:latest
-    hostname: "emqx"
-    container_name: emqx
+      jcohy-net:
+        ipv4_address: 172.30.0.68
+
+  minio:
+    image: minio/minio
+    hostname: "minio"
+    container_name: minio
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    volumes: 
+      - ${DOCKER_DIR}/minio/data:/data
+      - ${DOCKER_DIR}/minio/config:/root/.minio
     ports:
-      - "1883:1883"
-      - "8081:8081"
-      - "8083:8083"
-      - "8883:8883"
-      - "8084:8084"
-      - "18083:18083"
+      - 9001:9000
+    command: "server /data"
+    restart: always
     healthcheck:
-      test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
-      interval: 5s
-      timeout: 25s
-      retries: 5
-    volumes:
-      - ${DOCKER_DIR}/emqx/etc:/opt/emqx/etc
-      - ${DOCKER_DIR}/emqx/data:/opt/emqx/data
-      - ${DOCKER_DIR}/emqx/log:/opt/emqx/log
-    privileged: true
-    restart: always
+      test: ["CMD", "curl", "-f", "http://minio:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
     networks:
       - jcohy-net
-      
+
+
   es-master:
     container_name: es-master
     hostname: es-master
@@ -216,7 +181,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - jcohy-net
-      
+
   es-slave1:
     container_name: es-slave1
     image: elasticsearch:8.1.2
@@ -232,7 +197,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - jcohy-net
-      
+
   es-slave2:
     container_name: es-slave2
     image: elasticsearch:8.1.2
@@ -248,7 +213,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - jcohy-net
-      
+
   es-head:
     container_name: es-head
     image: mobz/elasticsearch-head:5
@@ -261,7 +226,7 @@ services:
       - es-slave2
     networks:
       - jcohy-net
-      
+
   kibana:
     container_name: kibana
     hostname: kibana
@@ -279,7 +244,7 @@ services:
       - es-slave2
     networks:
       - jcohy-net
-      
+
   filebeat:
     # 容器名称
     container_name: filebeat
@@ -308,7 +273,7 @@ services:
       - es-slave2
     networks:
       - jcohy-net
-      
+
   logstash:
     container_name: logstash
     hostname: logstash
@@ -327,7 +292,61 @@ services:
       - es-slave2
     networks:
       - jcohy-net
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name: kafdrop
+    restart: always
+    networks:
+      - jcohy-net
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:29092"
+    depends_on:
+      - "kafka"
+
+  mosquitto: 
+    image: eclipse-mosquitto:latest
+    hostname: "mosquitto"
+    container_name: mosquitto
+    volumes:
+      - ${DOCKER_DIR}/mosquitto/config:/mosquitto/config
+      - ${DOCKER_DIR}/mosquitto/data:/mosquitto/data
+      - ${DOCKER_DIR}/mosquitto/log:/mosquitto/log
+    ports:
+      - 9001:9001
+    privileged: true
+    restart: always
+    networks:
+      - jcohy-net
+
+  emqx:
+    image: emqx:latest
+    hostname: "emqx"
+    container_name: emqx
+    ports:
+      - "1883:1883"
+      - "8081:8081"
+      - "8083:8083"
+      - "8883:8883"
+      - "8084:8084"
+      - "18083:18083"
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
+      interval: 5s
+      timeout: 25s
+      retries: 5
+    volumes:
+      - ${DOCKER_DIR}/emqx/etc:/opt/emqx/etc
+      - ${DOCKER_DIR}/emqx/data:/opt/emqx/data
+      - ${DOCKER_DIR}/emqx/log:/opt/emqx/log
+    privileged: true
+    restart: always
+    networks:
+      - jcohy-net
       
+
   zookeeper:
     image: zookeeper:3.7.0
     container_name: zookeeper
@@ -356,18 +375,6 @@ services:
     depends_on:
       - zookeeper
 
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    container_name: kafdrop
-    restart: always
-    networks:
-      - jcohy-net
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: "kafka:29092"
-    depends_on:
-      - "kafka"
 networks:
   jcohy-net:
     name: jcohy-net
