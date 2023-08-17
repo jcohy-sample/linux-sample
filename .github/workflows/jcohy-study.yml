@@ -4,12 +4,15 @@
 name: Jcohy-Study CI with Gradle
 
 on:
+  push:
+    branches:
+    - main
   workflow_dispatch:
     inputs:
       uploadOss:
         description: '是否上传到 OSS'
         required: true
-        default: 'false'
+        default: 'true'
 
 permissions: read-all
 
