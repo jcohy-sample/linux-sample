@@ -3,10 +3,10 @@ package com.jcohy.sample.build;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jcohy.convention.conventions.ConventionsPlugin;
-import com.jcohy.convention.deployed.DeployedPlugin;
+import io.github.jcohy.gradle.asciidoctor.AsciidoctorConventionsPlugin;
+import io.github.jcohy.gradle.conventions.ConventionsPlugin;
+import io.github.jcohy.gradle.deployed.DeployedPlugin;
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask;
-import org.asciidoctor.gradle.jvm.AsciidoctorJExtension;
 import org.asciidoctor.gradle.jvm.AsciidoctorJPlugin;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -28,6 +28,7 @@ public class JcohyAsciidoctorPlugins implements Plugin<Project> {
         PluginContainer plugins = project.getPlugins();
         plugins.apply(AsciidoctorJPlugin.class);
         plugins.apply(ConventionsPlugin.class);
+        plugins.apply(AsciidoctorConventionsPlugin.class);
         plugins.apply(DeployedPlugin.class);
         plugins.withType(AsciidoctorJPlugin.class,(asciidoctorPlugin) -> {
             project.getTasks().withType(AbstractAsciidoctorTask.class, (asciidoctorTask) -> {
