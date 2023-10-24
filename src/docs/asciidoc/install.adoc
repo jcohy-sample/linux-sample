@@ -12,6 +12,7 @@
 * <<linux-install-git>>
 * <<linux-install-gitlab>>
 * <<linux-install-node>>
+* <<linux-install-kafka>>
 * <<linux-install-yapi>>
 * <<linux-install-mongodb>>
 * <<linux-install-docker>>
@@ -213,48 +214,62 @@ source /etc/profile
 java -version
 ----
 
-[[linux-install-tomcat]]
-=== Tomcat
+[[linux-install-kafka]]
+=== Kafka
 
-[[linux-install-tomcat-usually]]
+[[linux-install-kafka-usually]]
 ==== 常规安装
 
-. 用 FileZilla 或其他工具将下载好的安装包上传至 Linux 服务器.放置在 **/opt/software/** 目录下.这里使用的是 **apache-tomcat-7.0.94.tar.gz**
+. 用 FileZilla 或其他工具将下载好的安装包上传至 Linux 服务器.放置在 **/opt/software/** 目录下.这里使用的是 **kafka_2.13-3.6.0.tgz**
 
-. 解压 tomcat
+. 解压
 +
 [source,shell]
 ----
-tar -zxvf apache-tomcat-7.0.94.tar.gz -C /usr/local/
+tar -zxvf kafka_2.13-3.6.0.tgz -C /usr/local/
 ----
 
-. 启动 tomcat
+. 配置，修改 `/usr/local/kafka_2.13-3.6.0/config/server.properties` 文件，
 +
 [source,shell]
 ----
-/usr/local/apache-tomcat-7.0.94/bin/startup.sh
+# The id of the broker. This must be set to a unique integer for each broker.
+# 集群中唯一
+broker.id=1
+
+# 日志目录
+log.dirs=/usr/local/kafka/logs
+
+# 配置连接 Zookeeper 集群地址
+zookeeper.connect=cluster001:2181,cluster002:2181,cluster003:2181
 ----
 
-. 查看 tomcat 进程是否启动
+. 设置环境变量,在 `/etc/profile` 文件最后追加相关内容
 +
 [source,shell]
 ----
-jps
+vi /etc/profile
+
+export JAVA_HOME=/usr/local/jdk1.8.0_221
+export PATH=$PATH:$JAVA_HOME/bin
 ----
 
-. 查看 tomcat 进程端口
+. 刷新环境变量
 +
 [source,shell]
 ----
-netstat -anpt | grep 2465
+source /etc/profile
 ----
 
-. 通过浏览器访问 tomcat
-
-http://host:8080[http://host:8080]
+. 启动
++
+[source,shell]
+----
+./kafka-server-start.sh -daemon config/server.properties
+----
 
 [[linux-install-mysql]]
-=== Mysql
+=== MySQL
 
 [[linux-install-mysql-usually]]
 ==== 常规安装
@@ -1262,6 +1277,46 @@ ln -s /usr/local/node/node-v0.10.16-linux-x64/bin/node /usr/local/bin/node
 
 npm -v
 ----
+
+[[linux-install-tomcat]]
+=== Tomcat
+
+[[linux-install-tomcat-usually]]
+==== 常规安装
+
+. 用 FileZilla 或其他工具将下载好的安装包上传至 Linux 服务器.放置在 **/opt/software/** 目录下.这里使用的是 **apache-tomcat-7.0.94.tar.gz**
+
+. 解压 tomcat
++
+[source,shell]
+----
+tar -zxvf apache-tomcat-7.0.94.tar.gz -C /usr/local/
+----
+
+. 启动 tomcat
++
+[source,shell]
+----
+/usr/local/apache-tomcat-7.0.94/bin/startup.sh
+----
+
+. 查看 tomcat 进程是否启动
++
+[source,shell]
+----
+jps
+----
+
+. 查看 tomcat 进程端口
++
+[source,shell]
+----
+netstat -anpt | grep 2465
+----
+
+. 通过浏览器访问 tomcat
+
+http://host:8080[http://host:8080]
 
 [[linux-install-yapi]]
 === yapi
