@@ -1075,7 +1075,7 @@ docker pull gitlab/gitlab-ce:16.5.0-ce.0
      gitlab/gitlab-ce:13.0.14-ce.0
 ----
 
-[IMPOERANT]
+[IMPORTANT]
 ====
 在 14.0.x 之后的版本中进行升级时，请必须确保批量后台迁移完成。不能急于升级。可以在 gitlab 的管理界面 https://localhost/admin/background_migrations 中查看进度。
 当队列中所有的 `active` 状态标记为 `finished` 时，才可进行下一步迁移升级。
