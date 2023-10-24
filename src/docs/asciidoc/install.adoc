@@ -996,7 +996,8 @@ docker 环境部署 gitlab 的升级很简单，直接基于高版本的镜像�
 
 有关支持的升级路径示例的动态视图，请尝试由 GitLab 支持团队维护的 https://docs.gitlab.com/ee/update/index.html#upgrade-paths[升级路径工具]。
 
-现在我们要从 `11.1.4` 升级到 `13.4.3`, 我们的升级路线为 `11.3.4 -&gt; 11.11.8 -&gt; 12.0.12 -&gt; 12.1.17 -&gt; 12.10.14 -&gt; 13.0.14 -&gt; 13.4.3`
+现在我们要从 `11.1.4` 升级到 `13.4.3`, 我们的升级路线为 `11.3.4 -&gt; 11.11.8 -&gt; 12.0.12 -&gt; 12.1.17 -&gt; 12.10.14 -&gt; 13.0.14 -&gt; 13.4.3 -&gt; 13.4.7 -&gt; 13.8.8 -&gt;
+13.12.15 -&gt; 14.0.12 -&gt; 14.3.6 -&gt; 14.9.5 -&gt; 14.10.5 -&gt; 15.0.5 -&gt; 15.4.6 -&gt; 15.11.13 -&gt; 16.1.5 -&gt; 16.3.5 -&gt; 16.5.0`
 
 ===== 1、数据备份
 
@@ -1023,6 +1024,19 @@ docker pull gitlab/gitlab-ce:12.1.17-ce.0
 docker pull gitlab/gitlab-ce:12.10.14-ce.0
 docker pull gitlab/gitlab-ce:13.0.14-ce.0
 docker pull gitlab/gitlab-ce:13.4.3-ce.0
+docker pull gitlab/gitlab-ce:13.4.7-ce.0
+docker pull gitlab/gitlab-ce:13.8.8-ce.0
+docker pull gitlab/gitlab-ce:13.12.15-ce.0
+docker pull gitlab/gitlab-ce:14.0.12-ce.0
+docker pull gitlab/gitlab-ce:14.3.6-ce.0
+docker pull gitlab/gitlab-ce:14.9.5-ce.0
+docker pull gitlab/gitlab-ce:14.10.5-ce.0
+docker pull gitlab/gitlab-ce:15.0.5-ce.0
+docker pull gitlab/gitlab-ce:15.4.6-ce.0
+docker pull gitlab/gitlab-ce:15.11.13-ce.0
+docker pull gitlab/gitlab-ce:16.1.5-ce.0
+docker pull gitlab/gitlab-ce:16.3.5-ce.0
+docker pull gitlab/gitlab-ce:16.5.0-ce.0
 ----
 
 ===== 3、逐步升级镜像
@@ -1034,17 +1048,20 @@ docker pull gitlab/gitlab-ce:13.4.3-ce.0
 # 进入容器
 1、docker exec -i -t gitlab /bin/bash
 
+# 数据备份
+2、gitlab-rake gitlab:backup:create
+
 # 停止全部服务
-2、gitlab-ctl stop
+3、gitlab-ctl stop
 
 # 退出容器
-3、exit
+4、exit
 
 # 删除容器
-4、docker stop gitlab && docker rm gitlab
+5、docker stop gitlab && docker rm gitlab
 
 # 运行高版本容器
-5、docker run -d \
+6、docker run -d \
     --hostname 192.168.11.121 \
     -p 80:80 \
     -p 443:443 \
@@ -1058,9 +1075,18 @@ docker pull gitlab/gitlab-ce:13.4.3-ce.0
      gitlab/gitlab-ce:13.0.14-ce.0
 ----
 
+[IMPOERANT]
+====
+在 14.0.x 之后的版本中进行升级时，请必须确保批量后台迁移完成。不能急于升级。可以在 gitlab 的管理界面 https://localhost/admin/background_migrations 中查看进度。
+当队列中所有的 `active` 状态标记为 `finished` 时，才可进行下一步迁移升级。
+
+详情可参考 https://docs.gitlab.com/ee/update/background_migrations.html[批量后台迁移]
+====
+
+
 [NOTE]
 ====
-在最后一步中，注意切换 gitlab 镜像版本
+在最后一步中，注意切换 gitlab 镜像版本。建议每次升级升级成功后，进行数据备份，防止后续升级失败。
 ====
 
 ==== 数据恢复
