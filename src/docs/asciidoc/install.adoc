@@ -992,7 +992,9 @@ EOS
 由于官方已经开始支持 gitlab 的汉化了，所以开源的社区中文汉化已经不在更新了。最新版的 `twang2218/gitlab-ce-zh` 汉化镜像是基于官方 `gitlab/gitlab-ce:11.1.4-ce.0` 版本进行汉化的。现在我们需要将 gitlab 的版本升级到最新的 13.4.3。
 
 docker 环境部署 gitlab 的升级很简单，直接基于高版本的镜像运行容器即可；
-需要注意的是 gitlab 的升级不能跨大版本升级，我们必须先先升级到当前大版本号到最高版本，方可升级到下一个大版本号。可以参考官方给出的版本升级参考 https://gitlab-com.gitlab.io/support/toolbox/upgrade-path[官方推荐升级路线]
+需要注意的是 gitlab 的升级不能跨大版本升级，我们必须先先升级到当前大版本号到最高版本，方可升级到下一个大版本号。可以参考官方给出的版本升级参考 https://docs.gitlab.com/ee/update/index.html#installation-using-docker[官方推荐升级路线]
+
+有关支持的升级路径示例的动态视图，请尝试由 GitLab 支持团队维护的 https://docs.gitlab.com/ee/update/index.html#upgrade-paths[升级路径工具]。
 
 现在我们要从 `11.1.4` 升级到 `13.4.3`, 我们的升级路线为 `11.3.4 -&gt; 11.11.8 -&gt; 12.0.12 -&gt; 12.1.17 -&gt; 12.10.14 -&gt; 13.0.14 -&gt; 13.4.3`
 
@@ -1032,17 +1034,14 @@ docker pull gitlab/gitlab-ce:13.4.3-ce.0
 # 进入容器
 1、docker exec -i -t gitlab /bin/bash
 
-# 备份数据
-2、gitlab-rake gitlab:backup:create
-
 # 停止全部服务
-3、gitlab-ctl stop
+2、gitlab-ctl stop
 
 # 退出容器
-4、exit
+3、exit
 
 # 删除容器
-5、docker stop gitlab && docker rm gitlab
+4、docker stop gitlab && docker rm gitlab
 
 # 运行高版本容器
 5、docker run -d \
@@ -1061,7 +1060,7 @@ docker pull gitlab/gitlab-ce:13.4.3-ce.0
 
 [NOTE]
 ====
-在最后一步中，注意切换 gitlab 镜像版本。建议在升级过程中，每一次升级成功后都进行一次数据备份，防止下一次升级时失败可以进行回滚。
+在最后一步中，注意切换 gitlab 镜像版本
 ====
 
 ==== 数据恢复
